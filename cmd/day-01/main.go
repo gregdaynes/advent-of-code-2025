@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -12,7 +13,15 @@ func main() {
 	start := 50
 	input := ""
 
-	Day01(start, input)
+	bytes, err := os.ReadFile("./cmd/day-01/input.txt")
+	if err != nil {
+		fmt.Println("error reading input", err)
+		return
+	}
+	input = strings.Trim(string(bytes), "\n")
+
+	results := Day01(start, input)
+	fmt.Printf("results: %+v", results)
 }
 
 // a sequence end is marked by rotating to 0
