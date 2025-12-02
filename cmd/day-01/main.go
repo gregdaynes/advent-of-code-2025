@@ -48,10 +48,9 @@ func Day01(start int, input string) int {
 			} else if state > 99 {
 				state = 0
 			}
-		}
-
-		if state == 0 {
-			seqCount = seqCount + 1
+			if state == 0 {
+				seqCount = seqCount + 1
+			}
 		}
 	}
 

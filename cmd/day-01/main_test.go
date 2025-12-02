@@ -7,7 +7,7 @@ var start = 50
 
 func TestDay01(t *testing.T) {
 	t.Run("count number of sequences", func(t *testing.T) {
-		want := 3
+		want := 6
 		got := Day01(start, input)
 
 		if got != want {
