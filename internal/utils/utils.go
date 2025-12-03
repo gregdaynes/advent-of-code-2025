@@ -3,6 +3,7 @@ package utils
 import (
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -13,4 +14,12 @@ func ReadInput(path string) string {
 	}
 
 	return strings.Trim(string(bytes), "\n")
+}
+
+func Atoi(s string) int {
+	i, err := strconv.Atoi(s)
+	if err != nil {
+		log.Fatalf("could not convert %v to int", s)
+	}
+	return i
 }

@@ -21,8 +21,8 @@ func main() {
 func Day02(idGroups string) (sum int) {
 	for groups := range strings.SplitSeq(idGroups, ",") {
 		parts := strings.Split(groups, "-")
-		start, _ := strconv.Atoi(parts[0])
-		end, _ := strconv.Atoi(parts[1])
+		start := utils.Atoi(parts[0])
+		end := utils.Atoi(parts[1])
 
 		for n := start; n <= end; n++ {
 			id := strconv.Itoa(n)
