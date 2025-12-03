@@ -2,20 +2,16 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
+
+	"github.com/gregdaynes/advent-of-code-2025/internal/utils"
 )
 
 func main() {
 	fmt.Println("Running Day 01")
 
-	bytes, err := os.ReadFile("./cmd/day-01/input.txt")
-	if err != nil {
-		fmt.Println("error reading input", err)
-		return
-	}
-	input := strings.Trim(string(bytes), "\n")
+	input := utils.ReadInput("./cmd/day-01/input.txt")
 
 	results := Day01(50, input)
 	fmt.Printf("results: %+v\n", results)
