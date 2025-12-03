@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -42,18 +43,23 @@ func findInvalidID(rangeID string) (invalid []int) {
 	}
 
 	for i := start; i <= end; i++ {
-		id := strconv.Itoa(i)
-		l := len(id)
-		if l%2 > 0 {
-			continue
-		}
-
-		a := id[:l/2]
-		b := id[l/2:]
-		if a == b {
+		if !validID(strconv.Itoa(i)) {
 			invalid = append(invalid, i)
 		}
 	}
 
 	return invalid
+}
+
+func validID(id string) (ok bool) {
+	length := len(id)
+	maxIters := int(math.Floor(float64(length) / 2))
+
+	for i := 1; i <= maxIters; i++ {
+		if strings.Repeat(id[:i], length/i) == id {
+			return false
+		}
+	}
+
+	return true
 }
