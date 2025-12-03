@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"strconv"
 	"strings"
 
@@ -18,25 +17,25 @@ func main() {
 	fmt.Printf("results: %+v\n", results)
 }
 
-func Day02(idGroups string) (sum int) {
-	for groups := range strings.SplitSeq(idGroups, ",") {
-		parts := strings.Split(groups, "-")
-		start := utils.Atoi(parts[0])
-		end := utils.Atoi(parts[1])
+func Day02(idGroups string) (total int) {
+	for rangeStr := range strings.SplitSeq(idGroups, ",") {
+		bounds := strings.Split(rangeStr, "-")
+		start := utils.Atoi(bounds[0])
+		end := utils.Atoi(bounds[1])
 
-		for n := start; n <= end; n++ {
-			id := strconv.Itoa(n)
-			length := len(id)
-			maxIters := int(math.Floor(float64(length) / 2))
+		for id := start; id <= end; id++ {
+			length := utils.LenI(id)
 
-			for i := 1; i <= maxIters; i++ {
-				if strings.Repeat(id[:i], length/i) == id {
-					sum += n
+			for i := 1; i <= length/2; i++ {
+				compId := utils.Atoi(strings.Repeat(strconv.Itoa(id)[:i], length/i))
+
+				if compId == id {
+					total += id
 					break
 				}
 			}
 		}
 	}
 
-	return sum
+	return total
 }
