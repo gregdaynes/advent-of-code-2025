@@ -19,11 +19,20 @@ func main() {
 func Day04(input string) (rolls int) {
 	table, rows, cols := parseInput(input)
 
-	for y := range rows {
-		for x := range cols {
-			if checkRollAccess(table, cols, rows, x, y) {
-				rolls += 1
+	for {
+		start := rolls
+
+		for y := range rows {
+			for x := range cols {
+				if checkRollAccess(table, cols, rows, x, y) {
+					rolls += 1
+					table[y][x] = false
+				}
 			}
+		}
+
+		if start == rolls {
+			break
 		}
 	}
 
@@ -36,14 +45,7 @@ func checkRollAccess(table [][]bool, cols, rows, x, y int) bool {
 		return false
 	}
 
-	// 3. find 8 adjacent cells
-	//    doesn't have to remember location, just value
-	//    we will need to check the cell exists before checking for value
-	adj := countAdjacent(table, x, y, rows, cols)
-
-	// 4. check if there are less than  4 trues around coords
-
-	return adj < 4
+	return countAdjacent(table, x, y, rows, cols) < 4
 }
 
 func countAdjacent(table [][]bool, x, y, width, height int) (adj int) {

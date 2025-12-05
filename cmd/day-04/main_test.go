@@ -10,7 +10,7 @@ var input = "..@@.@@@@.\n@@@.@.@.@@\n@@@@@.@.@@\n@.@@@@..@.\n@@.@@@@.@@\n.@@@@@@
 func TestDay04(t *testing.T) {
 	t.Run("Day", func(t *testing.T) {
 		got := Day04(input)
-		want := 13
+		want := 43
 
 		if got != want {
 			t.Errorf("wanted %v, got %v", want, got)
