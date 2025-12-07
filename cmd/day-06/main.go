@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"regexp"
 	"strconv"
 	"strings"
 
@@ -16,58 +15,68 @@ func main() {
 	fmt.Printf("results: %+v\n", results)
 }
 
-// consecutive spaces
-var re = regexp.MustCompile("\\s+")
-
 type question struct {
 	operator string
-	parts    []int
+	parts    []string
 }
 
 func Day06(input string) (total int) {
 	lines := strings.Split(input, "\n")
-	opLineIdx := len(lines) - 1
+	maxI := len(lines[0]) - 1
+	maxJ := len(lines)
 
-	qs := make([]question, questionCount(lines[0])+1)
+	qs := make([]question, maxI)
+	n := 0
 
-	for i, row := range lines {
-		val := re.Split(row, -1)
+QUESTIONS:
+	for i := maxI; i >= 0; i-- {
+		q := qs[n]
+		part := ""
 
-		for j, v := range val {
-			q := qs[j]
+		for j := range maxJ {
+			char := string(lines[j][i])
 
-			if i == opLineIdx {
-				q.operator = v
-			} else {
-				parts := q.parts
-				vv, _ := strconv.Atoi(v)
-				q.parts = append(parts, vv)
+			// flush the parts, then set the operator
+			if char == "+" || char == "*" {
+				parts := append(q.parts, part)
+				q.parts = parts
+
+				q.operator = char
+				qs[n] = q
+				i -= 1
+				n += 1
+				continue QUESTIONS
 			}
 
-			qs[j] = q
+			part += char
 		}
+
+		parts := append(q.parts, part)
+		qs[n].parts = parts
 	}
 
+	//
 	for _, q := range qs {
+		fmt.Println(q)
 		switch q.operator {
 		case "+":
 			v := 0
 			for _, pt := range q.parts {
+				pt, _ := strconv.Atoi(strings.Trim(pt, " "))
 				v = v + pt
 			}
+			fmt.Println(v)
 			total += v
 		case "*":
 			v := 1
 			for _, pt := range q.parts {
+				pt, _ := strconv.Atoi(strings.Trim(pt, " "))
 				v = v * pt
 			}
+			fmt.Println(v)
 			total += v
 		}
 	}
 
 	return total
-}
-
-func questionCount(input string) int {
-	return len(re.Split(input, -1))
 }
