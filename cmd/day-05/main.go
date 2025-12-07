@@ -28,7 +28,6 @@ func Day05(input string) (count int) {
 
 CURRENT:
 	for v := range strings.SplitSeq(input, "\n") {
-		fmt.Println("---------")
 		if v == "" {
 			break CURRENT
 		}
@@ -42,46 +41,37 @@ CURRENT:
 
 		low, _ := strconv.Atoi(parts[0])
 		high, _ := strconv.Atoi(parts[1])
-		fmt.Println(v, low, high)
 
 		// EXISTING:
 		for i, e := range acc {
-			fmt.Println("existing check", e)
 			// covered already
 			if low >= e.low && high <= e.high {
-				fmt.Println("skipping", e, low, high)
 				continue CURRENT
 			}
 
-			// covers existin
+			// covers existing
 			if low <= e.high && high >= e.low {
 				acc[i] = Range{}
-				fmt.Println("removing", e, low, high)
 			}
 
 			// lower than low
 			if low <= e.low && high >= e.low && high <= e.high {
 				high = e.high
 				acc[i] = Range{}
-				fmt.Println("extending low", e, low, high, acc[i])
 			}
 
 			// higher than high
 			if high >= e.high && low <= e.high && low >= e.low {
 				low = e.low
 				acc[i] = Range{}
-				fmt.Println("extending high", e, low, high, acc[i])
 			}
 		}
 
-		fmt.Println("new entry", low, high)
 		acc = append(acc, Range{
 			low:  low,
 			high: high,
 		})
 	}
-
-	fmt.Println(acc)
 
 	for _, v := range acc {
 		if v.high != 0 {
