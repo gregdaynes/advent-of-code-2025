@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -22,42 +23,71 @@ func main() {
 	fmt.Printf("results: %+v\n", results)
 }
 
-func Day05(input string) int {
-	ranges := make([]Range, 0, 100)
-	freshIDs := map[int]bool{}
+func Day05(input string) (count int) {
+	acc := make([]Range, 0, 200)
 
-	// 1. Prepare the data by taking the first part (before \n\n)
-	// 2. Turning it into a low/high range and storing it in a slice
-	// 3. iterate over the available ids (after \n\n)
-	// 4. check through each slice if its within or equal the range
-	var check bool
+CURRENT:
 	for v := range strings.SplitSeq(input, "\n") {
+		fmt.Println("---------")
 		if v == "" {
-			check = true
-			continue
+			break CURRENT
 		}
 
-		if !check {
-			parts := strings.Split(v, "-")
-			low, _ := strconv.Atoi(parts[0])
-			high, _ := strconv.Atoi(parts[1])
+		parts := strings.Split(v, "-")
+		slices.SortFunc(parts, func(a, b string) int {
+			low, _ := strconv.Atoi(b)
+			high, _ := strconv.Atoi(a)
+			return high - low
+		})
 
-			ranges = append(ranges, Range{
-				low:  low,
-				high: high,
-			})
-		}
+		low, _ := strconv.Atoi(parts[0])
+		high, _ := strconv.Atoi(parts[1])
+		fmt.Println(v, low, high)
 
-		if check {
-			vint, _ := strconv.Atoi(v)
-
-			for _, r := range ranges {
-				if vint >= r.low && vint <= r.high {
-					freshIDs[vint] = true
-				}
+		// EXISTING:
+		for i, e := range acc {
+			fmt.Println("existing check", e)
+			// covered already
+			if low >= e.low && high <= e.high {
+				fmt.Println("skipping", e, low, high)
+				continue CURRENT
 			}
+
+			// covers existin
+			if low <= e.high && high >= e.low {
+				acc[i] = Range{}
+				fmt.Println("removing", e, low, high)
+			}
+
+			// lower than low
+			if low <= e.low && high >= e.low && high <= e.high {
+				high = e.high
+				acc[i] = Range{}
+				fmt.Println("extending low", e, low, high, acc[i])
+			}
+
+			// higher than high
+			if high >= e.high && low <= e.high && low >= e.low {
+				low = e.low
+				acc[i] = Range{}
+				fmt.Println("extending high", e, low, high, acc[i])
+			}
+		}
+
+		fmt.Println("new entry", low, high)
+		acc = append(acc, Range{
+			low:  low,
+			high: high,
+		})
+	}
+
+	fmt.Println(acc)
+
+	for _, v := range acc {
+		if v.high != 0 {
+			count += v.high - v.low + 1
 		}
 	}
 
-	return len(freshIDs)
+	return count
 }
